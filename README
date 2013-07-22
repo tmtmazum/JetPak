@@ -1,0 +1,7 @@
+--- JET PAK --- 
+
+About : 
+	This is a 2D platformer about a guy with a jetpack who runs about causing trouble. You get to play both on-land (running) and on air (where you would use the mouse to navigate), solving puzzles and staying alive (a good part of which will actually require controlling your jetpack - e.g. you can't fall from 50 feet or bump into anything at that speed and expect to survive). On running mode, you would actually be able to use the mouse to interact with various ui components of the suit, select upgrades, etc. There will hopefully be a couple of upgrades along the game, which will mostly seek to change the dynamic of your flight (multi-directional thrusters, etc.). You would be encouraged to play with these different kind of upgrades in different ways to deal with varying levels and situations (varying gravity, magnetic fields, etc. [Just a couple from the top of my head])
+
+This project is mostly just an excuse for me to explore some very simple physics concepts in video-game-form. A lot of what I've mentioned above^ are ideas I'm looking to implement; if they start going south, I might drop them along the way. I'm looking to investigate the possible practical implications of controlling a real-life jetpack as a means of transportation/general-hooliganism. Also its just a good reason for me to program and play around with some fun physics ideas, and get some experience in that whole general area.
+
