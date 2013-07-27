@@ -1,0 +1,19 @@
+#ifndef __GAME_CONSTANTS__
+#define __GAME_CONSTANTS__
+
+#define PLAYER_SPRITE_URL "BMPs/gameSpriteSheet2_2.png"
+
+#define BACKGROUND_1_URL "BMPs/backgroundSize1.png"
+
+#define INIT_BACKGROUND_ENABLED 1
+
+#include <string>
+
+struct CONST 
+{
+    static int BACKGROUND_ON;
+};
+
+int CONST::BACKGROUND_ON = 1;
+
+#endif

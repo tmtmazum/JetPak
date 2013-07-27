@@ -1,0 +1,19 @@
+
+#include <iostream>
+#include "headers/Util.h"
+
+using namespace std;
+
+int main()
+{
+    cout << "0.0102 is " << Util::stringToFloat( "0.0102" ) << endl;
+    float f = Util::stringToFloat("0.0");
+    cout << "0.0 is " << f << endl;
+    
+    f = Util::stringToFloat("1.0101");
+    cout << "1.0101 is " << f << endl;
+    
+    f = Util::stringToFloat("abs");
+    cout << "f is " << f << endl;
+    
+}

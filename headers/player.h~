@@ -6,6 +6,8 @@
 #include "DEBUG.h"
 #include "transform.h"
 #include "Texture.h"
+#include "GAME_CONSTANTS.h"
+#include "GAME_SETTINGS.h"
 
 #include <cassert>
 #include <GL/glut.h>
@@ -30,29 +32,44 @@ struct player
     PosXY maxSpeed; TextureIF* TXR;
     ImagePWH* Ix;
     
+    GAME_SETTINGS* GameData;
+    
+    void getSettings( GAME_SETTINGS* GD )
+    {
+	GameData = GD;
+    }
+    
+    float get(std::string s)
+    {
+	assert( GameData != NULL );
+	return GameData->DATA[s];
+    }
+    
     void initSettings(int i = 0)
     {
-	if(i==0)
+	assert(GameData != NULL);
+	if(i==0 || i==1)
 	{
-	    onGround = true; running = false;
-	    thrustOn = false;
+	    onGround = get("PLAYER_INIT_ONGROUND"); running = get("PLAYER_INIT_RUNNING");
+	    thrustOn = get("PLAYER_INIT_THRUSTON");
 
 	    speed = PosXY(0,0);
 	    acceleration = PosXY(0, g);
 	    
-	    position = PosXY(0.1 , 0.2);
+	    position = PosXY( get("PLAYER_INIT_POS_X") , get("PLAYER_INIT_POS_Y"));
 	    // size = PosXY(0.05 , 0.05);
-	    size = PosXY(0.1* 0.625, 0.1);
+	    size = PosXY( get("PLAYER_SPRITE_SCALE") * 0.625, get("PLAYER_SPRITE_SCALE"));
 	    
 	  
 	    angle = 0;
-	    thrust = -1.4*g;
+	    thrust = -get("PLAYER_INIT_THRUST_MAGN")*g;
 	    
-	    runSpeed = 0.005; runAngle= 0.1;
+	    runSpeed = get("PLAYER_INIT_RUN_SPEED"); 
+	    runAngle= get("PLAYER_INIT_RUN_ANGLE");
 	    
 	    maxSpeed = PosXY( player::dyingSpeed*2 , player::dyingSpeed*2 );
 	    
-	    TXR = new TextureIF( ImagePNG("BMPs/gameSpriteSheet2.png") );
+	    TXR = new TextureIF( ImagePNG( PLAYER_SPRITE_URL ) );
 	
 	    glClear(GL_ACCUM_BUFFER_BIT);
 
@@ -65,13 +82,14 @@ struct player
 	    speed = PosXY(0,0);
 	    acceleration = PosXY(0, g);
 	    
-	    size = PosXY(0.1* 0.625, 0.1);
+	    size = PosXY(get("PLAYER_SPRITE_SCALE") * 0.625, get("PLAYER_SPRITE_SCALE"));
 	    
 	}
     }
     
     player()    {
-	initSettings();
+	GameData = NULL;
+	// initSettings();
     }
     
     ~player()	{
@@ -150,7 +168,11 @@ struct player
     
     void updateAcceleration()
     {
-	acceleration = PosXY( getThrustRight() - (speed.X*air_resistance*0.1) , g + getThrustUp() /*- (speed.Y*air_resistance)*/ );
+	float x1 = getThrustRight();
+	float xred = speed.X*air_resistance.X;
+	float y1 = getThrustUp() + g;
+	float yred = speed.Y*air_resistance.Y;
+	acceleration = PosXY( x1 - xred , y1 - yred);
     }
     
     void updateSpeed( float fX , float fY )

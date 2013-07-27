@@ -80,14 +80,23 @@ struct LEVEL_BLOCK_SIMPLE : public LEVEL_OBJECT
     {
 	if(r.onGround && lastCollision!=0)
 	{
-	    PosXY nt = PosXY(r.position.X , r.position.Y - 0.00001);
+	    DEBUG("h",1);
+	    PosXY nt = PosXY(r.position.X , r.position.Y - LAND_OBJECT::elevation);
 	    LO_FLAT_FLOOR* Ls = dynamic_cast< LO_FLAT_FLOOR* >( lastCollision );
+	    LO_FLAT_RECT* Lr = dynamic_cast< LO_FLAT_RECT* >( lastCollision );
 	    if( Ls!=0 && !Ls->isCollision(nt, prevPos) )
 	    {
 		r.onGround = false;
 		lastCollision = 0;
 		return;
 	    }
+	    else if( Lr!=0 && !Lr->isCollision(nt, prevPos) )
+	    {
+		r.onGround = false;
+		lastCollision = 0;
+		return;
+	    }
+	    DEBUG("h",2);
 	}
 	else
 	{
