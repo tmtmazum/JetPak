@@ -80,7 +80,6 @@ struct LEVEL_BLOCK_SIMPLE : public LEVEL_OBJECT
     {
 	if(r.onGround && lastCollision!=0)
 	{
-	    DEBUG("h",1);
 	    PosXY nt = PosXY(r.position.X , r.position.Y - LAND_OBJECT::elevation);
 	    LO_FLAT_FLOOR* Ls = dynamic_cast< LO_FLAT_FLOOR* >( lastCollision );
 	    LO_FLAT_RECT* Lr = dynamic_cast< LO_FLAT_RECT* >( lastCollision );
@@ -96,7 +95,6 @@ struct LEVEL_BLOCK_SIMPLE : public LEVEL_OBJECT
 		lastCollision = 0;
 		return;
 	    }
-	    DEBUG("h",2);
 	}
 	else
 	{
@@ -136,8 +134,8 @@ struct LEVEL_BLOCK_SIMPLE : public LEVEL_OBJECT
     void drawLevel()
     {	
 	assert( !GOs.empty() );
-	Colors::Red.get();
-	
+	// Colors::Red.get();
+	glColor4f( 0.8, 0.8, 0.8, 1.0 );
 	for(std::vector<GEOMETRY_OBJECT*>::iterator it = GOs.begin(); it != GOs.end(); ++it)
 	{
 	    Draw::Generic( *it );

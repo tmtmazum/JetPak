@@ -9,6 +9,7 @@ namespace JetUtil
     void drawSpeed(player& P1);
     void drawHeight(player& P1);
     void drawWidth(player& P1);
+    void drawProgress(float f);
 };
 
 #endif

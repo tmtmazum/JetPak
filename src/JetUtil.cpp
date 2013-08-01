@@ -125,3 +125,34 @@ void JetUtil::drawWidth(player& P1)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL );
     // glRotatef(-90 , 0 , 0 , 1);
 }
+
+void JetUtil::drawProgress( float f )
+{
+    float xBegin = 0.75;
+    float xLength = 0.2;
+    float xEnd = xBegin + xLength;
+    
+    float yBegin = 0.8;
+    float yHeight = 0.02;
+    
+    PosXY X2( xBegin , yBegin );
+    PosXY Y2( xBegin + xLength*f, yBegin );
+    PosXY X1( xBegin , yBegin - yHeight );
+    PosXY Y1( xBegin + xLength*f, yBegin - yHeight );
+    glBegin( GL_TRIANGLE_STRIP );
+	X2.getVertex();
+	Y2.getVertex();
+	X1.getVertex();
+	Y1.getVertex();
+    glEnd();
+    
+    Y2.X = xEnd;
+    Y1.X = xEnd;
+    Colors::Black.get();
+    glBegin( GL_LINES );
+	X1.getVertex();
+	X2.getVertex();
+	Y2.getVertex();
+	Y1.getVertex();
+    glEnd();
+}

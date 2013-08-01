@@ -10,15 +10,28 @@
 #include "Util.h"
 #include "DEBUG.h"
 
+#include "WORLD.h"
+/*
+struct LEVEL_TERRAIN
+{
+    std::vector< WO& > DATA;
+    void loadFromFile(std::string s)
+    {
+	DATA.clear();
+	
+	std::ifstream iFile( s.c_str() , std::ifstream::in);
+	
+	char line[256]; std::string lstr;
+	
+	iFile.getline( line , 256 );
+	lstr.assign( line );
+    }
+};
+*/
 struct GAME_SETTINGS
 {
     std::map<std::string, float> DATA;
-    /*float operator[] (const char*& s)
-    {
-	std::string c;
-	c.assign(s);
-	return DATA[c];
-    }*/
+    
     float& operator[] (std::string s)
     {
 	std::map<std::string, float>::iterator it = DATA.find( s );
@@ -109,5 +122,7 @@ struct GAME_SETTINGS
 	}
     }
 };
+
+
 
 #endif

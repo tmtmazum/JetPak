@@ -9,6 +9,7 @@
 #include "headers/player.h"
 #include "headers/Util.h"
 #include "headers/JetUtil.h"
+#include "headers/WORLD.h"
 
 #include "headers/GAME_CONSTANTS.h"
 #include "headers/GAME_SETTINGS.h"
@@ -193,7 +194,7 @@ void draw()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     // glViewport( 0 , 0 , WindowSize.X , WindowSize.Y );
-    gluOrtho2D(0, 1.5, 0, 1.5);
+    gluOrtho2D(0, 1.0, 0, 1.0);
     // glViewport( P1.position.X , P1.position.Y , WindowSize.X , WindowSize.Y );
     
     // glOrtho(0, 1, 0, 1, 0, 1);
@@ -247,13 +248,19 @@ void draw()
 	    }
 	}
     }
-    
     // drawWidth();
-    
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     
     if(GameData["BACKGROUND_ON"]) drawBackground();
+    
+    WO obj1;
+    obj1.set(WO::POSITION , 0.5, 0.5, END_F);
+    obj1.setGeometry( GO::RECT , 0.1 , 0.1 , END_F );
+    obj1.set(WO::COLOR , 0.4 , 0.4 , 0.4 , END_F );
+    obj1.set(WO::ALPHA , 0.5 , END_F );
+    obj1.set(WO::ROTATION , GameData["TEST_ANGLE_ROTATE"] , END_F);
+    draw2D( obj1 );
     
     if(!P1.onGround)
     {
@@ -265,7 +272,7 @@ void draw()
     if(zoomOn)
     {
 	zoomCam = screenZoom + GameData["CAMERA_INIT_ZOOM"];
-	DEBUG("screenZoom",screenZoom);
+	// DEBUG("screenZoom",screenZoom);
 	glScalef( zoomCam, zoomCam, 1);
 	GameData["CAMERA_CURRENT_WIDTH"] = zoomCam;
 	GameData["CAMERA_CURRENT_HEIGHT"] = zoomCam;
@@ -300,6 +307,13 @@ void draw()
     {
 	glScalef( 1/zoomCam, 1/zoomCam, 1);
     }
+    
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
+    
+    Colors::White.get(1.0);
+    if( P1.energy < 0 ) { Colors::Red.get(1.0); JetUtil::drawProgress( -0.08 ); }
+    else JetUtil::drawProgress( P1.energy );
     
     glutSwapBuffers();
     

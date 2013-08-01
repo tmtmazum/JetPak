@@ -134,8 +134,8 @@ struct LEVEL_BLOCK_SIMPLE : public LEVEL_OBJECT
     void drawLevel()
     {	
 	assert( !GOs.empty() );
-	Colors::Red.get();
-	
+	// Colors::Red.get();
+	glColor4f( 0.1, 0.1, 0.1, 1.0 );
 	for(std::vector<GEOMETRY_OBJECT*>::iterator it = GOs.begin(); it != GOs.end(); ++it)
 	{
 	    Draw::Generic( *it );

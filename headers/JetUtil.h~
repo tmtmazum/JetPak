@@ -5,7 +5,7 @@ class player;
 
 namespace JetUtil
 {
-    void drawWarningSpeed(player& P1)
+    void drawWarningSpeed(player& P1);
     void drawSpeed(player& P1);
     void drawHeight(player& P1);
     void drawWidth(player& P1);

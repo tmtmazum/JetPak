@@ -6,6 +6,10 @@
 #include <string>
 #include <cstdlib>
 
+#include <limits>
+
+#define END_F std::numeric_limits<float>::max()
+
 namespace Util
 {
     

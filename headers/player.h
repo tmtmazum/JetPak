@@ -23,6 +23,8 @@ struct player
     float thrust, angle;
     float runSpeed; float runAngle;
     
+    float energy; float energyDepletionRate, energyRechargeRate;
+    
     PosXY speed, acceleration;
     
     static float g;
@@ -48,7 +50,7 @@ struct player
     void initSettings(int i = 0)
     {
 	assert(GameData != NULL);
-	if(i==0 || i==1)
+	if(i==0)
 	{
 	    onGround = get("PLAYER_INIT_ONGROUND"); running = get("PLAYER_INIT_RUNNING");
 	    thrustOn = get("PLAYER_INIT_THRUSTON");
@@ -59,7 +61,9 @@ struct player
 	    position = PosXY( get("PLAYER_INIT_POS_X") , get("PLAYER_INIT_POS_Y"));
 	    // size = PosXY(0.05 , 0.05);
 	    size = PosXY( get("PLAYER_SPRITE_SCALE") * 0.625, get("PLAYER_SPRITE_SCALE"));
-	    
+	    energy = 1.0;
+	    energyDepletionRate = get("PLAYER_ENERGY_DEPLETION_RATE");
+	    energyRechargeRate =  get("PLAYER_ENERGY_RECHARGE_RATE");
 	  
 	    angle = 0;
 	    thrust = -get("PLAYER_INIT_THRUST_MAGN")*g;
@@ -147,6 +151,7 @@ struct player
     
     void updateFrame()
     {
+	updateEnergy();
 	if(onGround && !running) 
 	{
 	    return;
@@ -164,6 +169,32 @@ struct player
 	updateAcceleration();
 	updateSpeed( acceleration.X , acceleration.Y );
 	updatePosition( speed.X , speed.Y );
+    }
+    
+    void updateEnergy()
+    {
+	if( thrustOn && energy>-0.25 )
+	{
+	    energy -= energyDepletionRate;
+	    DEBUG( "T", 1);
+	}
+	else if( onGround && running && energy<1.0 )
+	{
+	    energy += 3*energyRechargeRate;
+	    DEBUG( "T", 2);
+	}
+	else if( energy<1.0 )
+	{
+	    energy += energyRechargeRate;
+	    DEBUG( "T", 3);
+	}
+	else
+	 DEBUG("energy", energy);
+	
+	if(energy < 0)
+	{
+	    thrustOn = false;
+	}
     }
     
     void updateAcceleration()
@@ -325,12 +356,13 @@ public:
 	    texTopLeft = PosXY(4*blockSizeX,1*blockSizeY);
 	    }
 	}
-	else if(thrustOn && count%200 < 100)
+	else if(thrustOn && count%100 < 50)
 	{
 	    float fidget = (abs(thrust) - abs(g))* 15 * (blockSizeX);
 	    fidget = (fidget < (blockSizeX/15) ? blockSizeX/15 : 
-			fidget > (blockSizeX/5) ? blockSizeX/3 : 
+			fidget > (blockSizeX/5) ? blockSizeX/5 : 
 			fidget);
+	    if(energy <= 0) fidget = blockSizeX/5;
 	    texBottomLeft = PosXY(-fidget + (float)1*blockSizeX,(float)1*blockSizeY);
 	    texBottomRight = PosXY(-fidget + (float)2*blockSizeX,(float)1*blockSizeY);
 	    texTopRight = PosXY(-fidget + (float)2*blockSizeX,(float)0*blockSizeY);
