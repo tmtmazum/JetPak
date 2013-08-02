@@ -10,6 +10,11 @@
 
 #define END_F std::numeric_limits<float>::max()
 
+typedef std::vector<float> VecF;
+typedef std::map<std::string, float> MapSF;
+typedef std::map<int,float> MapIF;
+typedef std::vector<string> VecS;
+
 namespace Util
 {
     

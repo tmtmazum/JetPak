@@ -356,7 +356,7 @@ public:
 	    texTopLeft = PosXY(4*blockSizeX,1*blockSizeY);
 	    }
 	}
-	else if(thrustOn && count%200 < 100)
+	else if(thrustOn && count%100 < 50)
 	{
 	    float fidget = (abs(thrust) - abs(g))* 15 * (blockSizeX);
 	    fidget = (fidget < (blockSizeX/15) ? blockSizeX/15 : 

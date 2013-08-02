@@ -176,20 +176,16 @@ struct player
 	if( thrustOn && energy>-0.25 )
 	{
 	    energy -= energyDepletionRate;
-	    DEBUG( "T", 1);
 	}
 	else if( onGround && running && energy<1.0 )
 	{
 	    energy += 3*energyRechargeRate;
-	    DEBUG( "T", 2);
 	}
 	else if( energy<1.0 )
 	{
 	    energy += energyRechargeRate;
-	    DEBUG( "T", 3);
 	}
-	else
-	 DEBUG("energy", energy);
+	else {}
 	
 	if(energy < 0)
 	{

@@ -44,6 +44,27 @@ struct WO
 	COLLISION
     };
         
+    static int getPropertyEnum(std::string s)
+    {
+	switch(s)
+	{
+	    case "POSITION":
+		return POSITION;
+	    case "COLOR":
+		return COLOR;
+	    case "ALPHA":
+		return ALPHA;
+	    case "ROTATION":
+		return ROTATION;
+	    case "GEOMETRY":
+		return GEOMETRY;
+	    case "SCALE":
+		return SCALE;
+	    case "NP_SCALE":
+		return NP_SCALE;
+	}
+    }
+    
     WO() {}
     
     void setGeometry( int i , ... )
@@ -61,6 +82,12 @@ struct WO
 	}
 	va_end( ARGs );
     }
+    void setGeometry( int i , const VecF& dt )
+    {
+	GO_type = i;
+	GO_data = dt;
+    }
+    
     
     void set( property p , ... )
     {
@@ -76,6 +103,8 @@ struct WO
 	va_end( ARGs );
 	property_data[ p ] = PD; 
     }
+    void set(
+    
     VecF get(property p) 
     {
 	VecF V = property_data[ p ];
@@ -91,7 +120,7 @@ struct WO
     }
 };
 
-void draw2D( WO& obj )
+inline void draw2D( WO& obj )
 {
     VecF Rot = obj.get(WO::ROTATION);
     VecF V = obj.get(WO::COLOR);

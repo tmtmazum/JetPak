@@ -23,6 +23,7 @@
 using namespace std;
 
 GAME_SETTINGS GameData;
+LEVEL_TERRAIN LevelData;
 
 PosXY WindowSize(800, 800);
 MouseAB Mouse;
@@ -35,7 +36,8 @@ bitmask INPUT_STATE(0);
 
 enum {
   KEYPRESS_A,
-  KEYPRESS_D
+  KEYPRESS_D,
+  KEYPRESS_SPACE
 };
 
 float player::g = -0.0005;
@@ -189,7 +191,7 @@ void draw()
 { static int frameCount = 0; frameCount++;    
     static int timeElapsed=0;
     static PosXY prevPos = P1.position;
-
+    static int JetState = 0;
     updateAll();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -219,6 +221,7 @@ void draw()
 	bool a,b,c;
 	a =INPUT_STATE.get( KEYPRESS_A );
 	b =INPUT_STATE.get( KEYPRESS_D ); 
+	c = INPUT_STATE.get( KEYPRESS_SPACE );
 	if(a)
 	{
 	    if(P1.onGround && !P1.running)
@@ -246,6 +249,48 @@ void draw()
 	    {
 		P1.setRun(0);
 	    }
+	}
+	int jumpFrames = GameData["PLAYER_INIT_JUMP_FRAMES"];
+	if( c )
+	{
+	    JetState++;
+	    // if(P1.onGround)
+	    // {
+	    // }
+	    if( JetState >= jumpFrames )
+	    {
+		if( GameData["PLAYER_JETPAK_ON"] == 1.0 )
+		{
+		    P1.thrustOn = true;
+		    P1.onGround = false;
+		}
+	    JetState = -1;
+	    }
+	    glutWarpPointer( WindowSize.X / 2 , WindowSize.Y / 2 );
+	    Mouse.setPosition(  WindowSize.X / 2 , WindowSize.Y / 2 );
+	    Mouse.savePos();
+	    glutSetCursor( GLUT_CURSOR_NONE );
+	}
+	else
+	{
+	    if( JetState>0 && (JetState<=jumpFrames||GameData["PLAYER_JETPAK_ON"]==0.0) && P1.onGround )
+	    {
+		int boost = ((jumpFrames+1) - JetState);
+		DEBUG("Made jump. Boost is" , boost );
+		P1.speed.Y += -boost*GameData["PLAYER_INIT_JUMP_SPEED"]*player::g * cos(2*P1.angle);
+		P1.speed.X += -boost*GameData["PLAYER_INIT_JUMP_SPEED"]*player::g * sin(2*P1.angle);
+		P1.onGround = false;
+	    }
+	    P1.thrustOn = false;
+	    JetState = 0;
+	}
+	
+	if(P1.onGround)
+	{    
+	    glutSetCursor( GLUT_CURSOR_CROSSHAIR );   
+	}
+	else { glutSetCursor( GLUT_CURSOR_NONE ); 
+	    glutWarpPointer( WindowSize.X / 2 , WindowSize.Y / 2 );
 	}
     }
     // drawWidth();
@@ -325,12 +370,7 @@ void handleKeyPress( unsigned char key, int x, int y )
     switch(key)
     {
 	case ' ':
-	    P1.thrustOn = true;
-	    P1.onGround = false;    
-	    glutWarpPointer( WindowSize.X / 2 , WindowSize.Y / 2 );
-	    Mouse.setPosition(  WindowSize.X / 2 , WindowSize.Y / 2 );
-	    Mouse.savePos();
-	    glutSetCursor( GLUT_CURSOR_NONE );
+	    INPUT_STATE.set( KEYPRESS_SPACE , true );
 	    break;
 	case 'a':
 	    INPUT_STATE.set( KEYPRESS_A , true );
@@ -349,8 +389,7 @@ void handleKeyUp( unsigned char key , int x , int y )
     switch(key)
     {
 	case ' ':
-	    P1.thrustOn = false;
-	    glutSetCursor( GLUT_CURSOR_CROSSHAIR );
+	    INPUT_STATE.set( KEYPRESS_SPACE , false );
 	    break;
 	case 'a':
 	    INPUT_STATE.set( KEYPRESS_A , false );/*
@@ -436,6 +475,8 @@ int initGame()
     // GameData.loadFromDefault();
     GameData.loadFromFile("game_const.scm");
     GameData.printAll();
+    
+    LevelData.loadFromFile("levels.scm");
     // Background Color
     glClearColor( 0.7f, 0.7f, 0.7f , 0.5f );
     
